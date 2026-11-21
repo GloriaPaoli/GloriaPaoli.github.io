@@ -1,0 +1,641 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gloria Paoli</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Gloria Paoli, researcher in Mathematical Analysis at the University of Naples Federico II. Shape optimization, spectral geometry and geometric inequalities.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+/* Layout: one centred reading column; sticky name + tab bar; four views (home, research, publications, teaching) switched by #hash */
+:root {
+  --bg: #fbfcfe;
+  --surface: #eef2f9;
+  --fg: #17202f;
+  --muted: #586379;
+  --accent: #1f4a96;
+  --rule: #d8dfeb;
+  --font-display: "Newsreader", "Iowan Old Style", Georgia, serif;
+  --font-body: "Source Sans 3", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e131c; --surface: #172033; --fg: #e4e9f2; --muted: #9ba7bb; --accent: #93b4ff; --rule: #27324a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e131c; --surface: #172033; --fg: #e4e9f2; --muted: #9ba7bb; --accent: #93b4ff; --rule: #27324a;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+[id] { scroll-margin-top: 5rem; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 400 1.0625rem/1.6 var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+  z-index: 10; background: var(--bg);
+}
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+a:hover { text-decoration-thickness: 2px; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+em, i { font-style: italic; }
+
+.wrap {
+  max-width: 54rem;
+  margin: 0 auto;
+  padding-left: max(20px, env(safe-area-inset-left, 0px));
+  padding-right: max(20px, env(safe-area-inset-right, 0px));
+}
+
+/* Top bar */
+.topbar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: var(--bg);
+  border-bottom: 1px solid var(--rule);
+}
+.topbar .wrap {
+  display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between;
+  gap: 0.25rem 1.5rem; padding-block: 0.75rem;
+}
+.brand {
+  font-family: var(--font-display); font-size: 1.25rem; font-weight: 500;
+  color: var(--fg); text-decoration: none;
+}
+nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; }
+nav a {
+  display: inline-block; padding-block: 0.25rem;
+  color: var(--muted); text-decoration: none; font-weight: 600; font-size: 0.95rem;
+  border-bottom: 2px solid transparent;
+}
+nav a:hover { color: var(--fg); }
+nav a[aria-current="page"] { color: var(--accent); border-bottom-color: var(--accent); }
+
+main { padding-block: 2.5rem 3rem; }
+.view { display: grid; gap: 2.75rem; }
+.view > section { display: grid; gap: 1rem; min-width: 0; }
+
+h1, h2, h3 { font-family: var(--font-display); font-weight: 500; text-wrap: balance; margin: 0; line-height: 1.2; }
+h1 { font-size: clamp(2.25rem, 6vw, 3rem); letter-spacing: -0.01em; }
+h2 { font-size: 1.75rem; color: var(--accent); }
+h3 { font-size: 1.2rem; }
+.page-title { font-size: clamp(2rem, 5vw, 2.5rem); color: var(--fg); }
+.lede { margin: 0; max-width: 40rem; color: var(--muted); }
+p { margin: 0; max-width: 42rem; }
+.label {
+  font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+}
+
+/* Home hero */
+.hero { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2rem; align-items: start; }
+.hero-text { display: grid; gap: 0.9rem; min-width: 0; }
+.role { font-family: var(--font-display); font-size: 1.35rem; color: var(--accent); line-height: 1.35; }
+.affil { font-style: normal; color: var(--muted); line-height: 1.5; }
+.affil strong { color: var(--fg); font-weight: 600; }
+.links { display: flex; flex-wrap: wrap; gap: 0.35rem 1.25rem; padding: 0; margin: 0; list-style: none; }
+.email { user-select: all; }
+
+.figure { margin: 0; width: 12rem; max-width: 100%; display: grid; gap: 0.4rem; justify-items: center; }
+.figure img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 6px; background: var(--surface); }
+
+.interests { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0; margin: 0; list-style: none; }
+.interests li {
+  background: var(--surface); color: var(--fg);
+  padding: 0.25rem 0.7rem; border-radius: 999px; font-size: 0.92rem;
+}
+
+/* Timelines (positions, visits, grants) */
+.timeline { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.1rem; }
+.timeline li { display: grid; grid-template-columns: 10.5rem minmax(0, 1fr); gap: 1.25rem; }
+.when { color: var(--muted); font-variant-numeric: tabular-nums; font-size: 0.95rem; padding-top: 0.1rem; }
+.what { display: grid; gap: 0.15rem; min-width: 0; }
+.what strong { font-weight: 600; }
+.what .sub { color: var(--muted); }
+.timeline.compact { gap: 0.6rem; }
+
+/* Publications */
+.pubs { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.15rem; counter-reset: pub var(--start); }
+.pubs li { display: grid; grid-template-columns: 2.25rem minmax(0, 1fr); gap: 0.75rem; counter-increment: pub -1; }
+.pubs li::before {
+  content: "[" counter(pub) "]";
+  color: var(--muted); font-variant-numeric: tabular-nums; font-size: 0.9rem; padding-top: 0.2rem; text-align: right;
+}
+.pubs.plain li::before { content: none; }
+.pubs.plain li { grid-template-columns: minmax(0, 1fr); }
+.pub { display: grid; gap: 0.1rem; min-width: 0; }
+.pub .title { font-family: var(--font-display); font-size: 1.13rem; line-height: 1.35; }
+.pub .authors { color: var(--fg); }
+.pub .authors b { font-weight: 600; }
+.pub .venue { color: var(--muted); }
+.pub .venue a { white-space: nowrap; }
+.count { color: var(--muted); font-family: var(--font-body); font-size: 1rem; font-weight: 400; }
+
+/* Talks */
+.year-group { display: grid; gap: 0.75rem; }
+.year-group h3 { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 1.05rem; font-family: var(--font-body); font-weight: 600; border-bottom: 1px solid var(--rule); padding-bottom: 0.3rem; }
+.talks { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.9rem; }
+.talks li { display: grid; grid-template-columns: 4.5rem minmax(0, 1fr); gap: 1rem; }
+.talks .when { font-size: 0.92rem; }
+.talks .t { font-family: var(--font-display); font-size: 1.08rem; line-height: 1.35; }
+.talks .ev { color: var(--muted); }
+.tag {
+  display: inline-block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--accent); border: 1px solid var(--rule); border-radius: 4px; padding: 0 0.35rem; margin-left: 0.35rem;
+  vertical-align: 0.1em;
+}
+
+/* Simple lists */
+.list { margin: 0; padding-left: 1.2rem; display: grid; gap: 0.5rem; }
+.list li { padding-left: 0.2rem; }
+.list .sub { color: var(--muted); }
+
+/* Teaching table */
+.course-table { width: 100%; border-collapse: collapse; font-size: 0.98rem; }
+.table-scroll { overflow-x: auto; }
+.course-table th { text-align: left; font-weight: 600; color: var(--muted); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 0 0.75rem 0.5rem 0; border-bottom: 1px solid var(--rule); }
+.course-table td { padding: 0.7rem 0.75rem 0.7rem 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.course-table td:first-child { white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--muted); }
+.course-table td:last-child { white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--muted); }
+.course-table .c { font-weight: 600; }
+.course-table .p { color: var(--muted); }
+
+.note {
+  background: var(--surface); border-radius: 8px; padding: 1rem 1.25rem; max-width: 42rem;
+}
+
+footer { border-top: 1px solid var(--rule); color: var(--muted); font-size: 0.88rem; }
+footer .wrap { padding-block: 1.5rem 2rem; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 1.5rem; }
+
+@media (max-width: 640px) {
+  .hero { grid-template-columns: minmax(0, 1fr); }
+  .figure { width: 9rem; justify-self: start; order: -1; }
+  .timeline li { grid-template-columns: minmax(0, 1fr); gap: 0.1rem; }
+  .talks li { grid-template-columns: minmax(0, 1fr); gap: 0; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="#home">Gloria Paoli</a>
+    <nav aria-label="Sections">
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#research">Research</a></li>
+        <li><a href="#publications">Publications</a></li>
+        <li><a href="#teaching">Teaching</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ============================ HOME ============================ -->
+<div class="view" id="view-home">
+  <section class="hero" aria-labelledby="name">
+    <div class="hero-text">
+      <h1 id="name">Gloria Paoli</h1>
+      <div class="role">Researcher in Mathematical Analysis</div>
+      <address class="affil">
+        <strong>Department of Mathematics and Applications “R. Caccioppoli”</strong><br>
+        University of Naples Federico II<br>
+        Complesso Universitario di Monte S. Angelo, Via Cintia<br>
+        80126 Naples, Italy
+      </address>
+      <ul class="links">
+        <li><a class="email" href="mailto:gloria.paoli@unina.it">gloria.paoli@unina.it</a></li>
+        <li><a href="#publications">Publications</a></li>
+        <li><a href="https://www.docenti.unina.it/gloria.paoli" target="_blank" rel="noopener">Unina page</a></li>
+        <li><a href="https://arxiv.org/search/?searchtype=author&amp;query=Paoli%2C+Gloria" target="_blank" rel="noopener">arXiv</a></li>
+        <!-- Add your profiles here, for example:
+        <li><a href="https://scholar.google.com/citations?user=XXXX">Google Scholar</a></li>
+        <li><a href="https://mathscinet.ams.org/mathscinet/MRAuthorID/XXXX">MathSciNet</a></li>
+        <li><a href="https://orcid.org/XXXX-XXXX-XXXX-XXXX">ORCID</a></li>
+        <li><a href="cv.pdf">CV</a></li>
+        -->
+      </ul>
+    </div>
+    <figure class="figure photo">
+      <img src="photo.jpg" alt="Portrait of Gloria Paoli" width="480" height="600">
+    </figure>
+  </section>
+
+  <section aria-labelledby="about">
+    <h2 id="about">About</h2>
+    <p>I am a fixed-term researcher (RTDA) at the Department of Mathematics and Applications “R. Caccioppoli” of the University of Naples Federico II. I received my PhD in Mathematics from the University of Naples Federico II in 2021. Before my current position I was a postdoctoral fellow in Naples and an Alexander von Humboldt postdoctoral fellow at Friedrich-Alexander-Universität Erlangen-Nürnberg.</p>
+    <p>In 2025 I obtained the Italian National Scientific Qualification (ASN) as Associate Professor in Mathematical Analysis (sector 01/A3).</p>
+  </section>
+
+  <section aria-labelledby="interests">
+    <h2 id="interests">Research interests</h2>
+    <p>I work on shape optimization and spectral geometry: how the geometry of a domain controls eigenvalues and other quantities attached to elliptic operators, which shapes are optimal, and how stable that optimality is.</p>
+    <ul class="interests">
+      <li>Shape optimization</li>
+      <li>Spectral geometry</li>
+      <li>Isoperimetric and functional inequalities</li>
+      <li>Quantitative stability estimates</li>
+      <li>Robin and Steklov eigenvalue problems</li>
+      <li>Torsional rigidity</li>
+      <li>Overdetermined problems</li>
+      <li>Hessian and anisotropic operators</li>
+      <li>Symmetrization and comparison results</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="career">
+    <h2 id="career">Positions</h2>
+    <ul class="timeline compact">
+      <li><span class="when">2023 – present</span><div class="what"><span><strong>Researcher (RTDA)</strong>, University of Naples Federico II</span></div></li>
+      <li><span class="when">2022 – 2023</span><div class="what"><span><strong>Humboldt Postdoctoral Fellow</strong>, FAU Erlangen-Nürnberg, Germany</span></div></li>
+      <li><span class="when">2021 – 2022</span><div class="what"><span><strong>Postdoctoral Research Fellow</strong>, University of Naples Federico II</span></div></li>
+      <li><span class="when">2018 – 2021</span><div class="what"><span><strong>PhD in Mathematics and Applications</strong>, University of Naples Federico II</span></div></li>
+    </ul>
+  </section>
+</div>
+
+<!-- ============================ RESEARCH ============================ -->
+<div class="view" id="view-research">
+  <section>
+    <h1 class="page-title">Research</h1>
+    <p class="lede">My research lies in the calculus of variations and the analysis of elliptic PDEs, with a focus on shape optimization, spectral inequalities and their quantitative versions.</p>
+  </section>
+
+  <section aria-labelledby="themes">
+    <h2 id="themes">Main themes</h2>
+    <ul class="list">
+      <li><strong>Spectral optimization.</strong> <span class="sub">Sharp bounds for eigenvalues of the Laplacian and the <i>p</i>-Laplacian with Robin, Steklov and mixed boundary conditions, on convex sets and on domains with holes.</span></li>
+      <li><strong>Quantitative inequalities.</strong> <span class="sub">Stability versions of isoperimetric-type inequalities, of the Weinstock inequality and of the Talenti comparison principle.</span></li>
+      <li><strong>Torsion and rigidity.</strong> <span class="sub">Torsional rigidity, Serrin-type overdetermined problems and rigidity results, including for Hessian operators and higher order mean curvatures.</span></li>
+      <li><strong>Anisotropic problems.</strong> <span class="sub">Finsler and orthotropic operators, anisotropic isoperimetric inequalities and rearrangements of BV functions.</span></li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="grants">
+    <h2 id="grants">Grants, fellowships and awards</h2>
+    <ul class="timeline">
+      <li><span class="when">PRIN PNRR 2022</span><div class="what"><strong>Research Unit Scientific Lead</strong><span class="sub">Project <em>A sustainable and trusted Transfer Learning platform for Edge Intelligence (STRUDEL)</em>, 24 months; coordinator Antonino Galletta; unit funding EUR 110,138.</span></div></li>
+      <li><span class="when">2024</span><div class="what"><strong>Scientific Coordinator, GNAMPA project</strong><span class="sub"><em>Spectral and shape optimization problems: qualitative aspects and quantitative estimates</em>.</span></div></li>
+      <li><span class="when">2022</span><div class="what"><strong>Alexander von Humboldt Research Fellowship for Postdocs</strong><span class="sub">24 months, Friedrich-Alexander-Universität Erlangen-Nürnberg.</span></div></li>
+      <li><span class="when">2018</span><div class="what"><strong>Mathematics Graduation Prize</strong><span class="sub">University of Florence, academic year 2017.</span></div></li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="projects">
+    <h2 id="projects">Projects and networks</h2>
+    <ul class="list">
+      <li>COST Action CA24136 <em>Interactions between Control Theory and Machine Learning</em>, participant and secondary proposer <span class="sub">(2025–2029)</span></li>
+      <li>COST Action CA24122 <em>multiscale Stochastics, Patterns, and Analysis of Combinatorial Environments</em> <span class="sub">(2025–2029)</span></li>
+      <li>GNAMPA 2026 <em>Partial Differential Equations: inverse problems and quantitative estimates</em> <span class="sub">(coord. E. Sincich)</span></li>
+      <li>GNAMPA 2025 <em>Geometric and spectral functional inequalities</em> <span class="sub">(coord. G. Saracco)</span></li>
+      <li>GNAMPA 2022 and 2023 <em>Optimal estimates for some shape functionals</em> <span class="sub">(coord. G. Piscitelli, D. A. La Manna)</span></li>
+      <li>COST Action CA18232 <em>Mathematical Models for Interacting Dynamics on Networks</em> <span class="sub">(completed 2024)</span></li>
+      <li>GNAMPA 2019 <em>Partial differential equations: geometric aspects, related inequalities and optimal shapes</em> <span class="sub">(coord. P. Salani)</span></li>
+      <li>PRIN 2015 and PRIN 2017 projects coordinated nationally by A. Cianchi <span class="sub">(local lead V. Ferone)</span></li>
+      <li>Member of INdAM–GNAMPA since 2018</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="visits">
+    <h2 id="visits">Research visits</h2>
+    <ul class="timeline">
+      <li><span class="when">Jun 2026</span><div class="what"><strong>Czech Technical University in Prague</strong><span class="sub">host: David Krejčiřík</span></div></li>
+      <li><span class="when">Jan – Mar 2020</span><div class="what"><strong>LAMA, Université Savoie Mont Blanc, Chambéry</strong><span class="sub">host: Dorin Bucur</span></div></li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="events">
+    <h2 id="events">Conferences organized</h2>
+    <ul class="timeline">
+      <li><span class="when">Jan 2026</span><div class="what"><strong>Shape Optimization, Geometric Inequalities and Related Topics: Third Edition</strong><span class="sub">Naples · scientific and organizing committee</span></div></li>
+      <li><span class="when">Nov 2025</span><div class="what"><strong>Analytical and Geometric Methods in PDEs</strong><span class="sub">Naples, Monte Sant'Angelo · scientific and organizing committee</span></div></li>
+      <li><span class="when">May – Jul 2025</span><div class="what"><strong>INdAM Intensive Research Period: Model theory and tame expansions of topological fields</strong><span class="sub">organizing committee</span></div></li>
+      <li><span class="when">May 2024</span><div class="what"><strong>Shape Optimization, Geometric Inequalities and Related Topics – II Edition</strong><span class="sub">Lecce · scientific and organizing committee</span></div></li>
+      <li><span class="when">Oct 2023</span><div class="what"><strong>Three Days on Shape Optimization and PDEs</strong><span class="sub">Naples · scientific and organizing committee</span></div></li>
+      <li><span class="when">Jan 2023</span><div class="what"><strong>Shape Optimization, Geometric Inequalities and Related Topics: Two-day Workshop for Young Researchers</strong><span class="sub">Naples · scientific and organizing committee</span></div></li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="talks">
+    <h2 id="talks">Talks</h2>
+
+    <div class="year-group"><h3>2026</h3><ul class="talks">
+      <li><span class="when">6 Jul</span><div><div class="t">Sharp estimates for the Laplacian torsional rigidity with negative Robin boundary conditions</div><div class="ev">Mathematics Days in Sofia 2026, minisymposium <em>Length Optimization</em>, Sofia</div></div></li>
+      <li><span class="when">9 Jun</span><div><div class="t">Sharp estimates for the Laplacian torsional rigidity with negative Robin boundary conditions</div><div class="ev">Seminar <em>Methods of Algebra and Functional Analysis in Applications</em>, Czech Technical University in Prague<span class="tag">invited</span></div></div></li>
+      <li><span class="when">28 May</span><div><div class="t">Overdetermined problems for Hessian operators: symmetry and stability results</div><div class="ev">International Conference on Elliptic and Parabolic Problems, GAETA 2026, minisymposium<span class="tag">invited</span></div></div></li>
+      <li><span class="when">17 Mar</span><div><div class="t">Hessian operators, overdetermined problems, and higher order mean curvature: symmetry and stability results</div><div class="ev">Kickoff Meeting of the COST Action mSPACE, Bocconi University, Milan<span class="tag">invited</span></div></div></li>
+      <li><span class="when">9 Feb</span><div><div class="t">Hessian operators, overdetermined problems, and higher order mean curvature: symmetry and stability results</div><div class="ev"><em>Geometric-Analytic Methods for PDEs and Applications: A Perspective by Young Researchers</em>, University of Florence<span class="tag">invited</span></div></div></li>
+      <li><span class="when">2 Feb</span><div><div class="t">Hessian operators: symmetry and stability results</div><div class="ev"><em>Emerging Horizons in Geometric Spectral Theory: an ECRs Workshop</em>, University of Cambridge</div></div></li>
+    </ul></div>
+
+    <div class="year-group"><h3>2025</h3><ul class="talks">
+      <li><span class="when">10 Sep</span><div><div class="t">Hessian operators, overdetermined problems, and higher order mean curvature: symmetry and stability results</div><div class="ev"><em>Recent Advances in PDEs and their Applications</em>, University of Eastern Piedmont, Alessandria<span class="tag">invited</span></div></div></li>
+    </ul></div>
+
+    <div class="year-group"><h3>2024</h3><ul class="talks">
+      <li><span class="when">19 Dec</span><div><div class="t">A stability result for the first Robin–Neumann eigenvalue: a double perturbation approach</div><div class="ev">14th AIMS Conference, NYU Abu Dhabi</div></div></li>
+      <li><span class="when">18 Oct</span><div><div class="t">Talenti comparison result and quantitative inequalities</div><div class="ev"><em>PDEs and their Applications</em>, IV Caserta–Lecce–Naples–Salerno Meeting<span class="tag">invited</span></div></div></li>
+      <li><span class="when">17 Sep</span><div><div class="t">A stability result for the first Robin–Neumann eigenvalue: a double perturbation approach</div><div class="ev"><em>Elliptic and Parabolic Problems: Analytic and Geometric Methods</em>, Parthenope University of Naples<span class="tag">invited</span></div></div></li>
+      <li><span class="when">17 Jul</span><div><div class="t">Stability inequality of the Talenti comparison result</div><div class="ev">9th European Congress of Mathematics, Seville, minisymposium<span class="tag">invited</span></div></div></li>
+      <li><span class="when">14 Jun</span><div><div class="t">The Talenti comparison result in a quantitative form</div><div class="ev"><em>A Glimpse into PDEs</em>, University of Campania Luigi Vanvitelli<span class="tag">invited</span></div></div></li>
+      <li><span class="when">24 May</span><div><div class="t">The Talenti comparison result in a quantitative form</div><div class="ev">82nd International Workshop on Advances in Nonlinear Analysis and Optimization, Erice</div></div></li>
+      <li><span class="when">23 Feb</span><div><div class="t">The Talenti comparison result in a quantitative form</div><div class="ev"><em>Three Days on Regularity for Variational Problems and PDEs</em>, University of Modena and Reggio Emilia</div></div></li>
+      <li><span class="when">31 Jan</span><div><div class="t">The Talenti comparison result in a quantitative form</div><div class="ev">Seminars on Mathematical Analysis, University of Salerno<span class="tag">invited</span></div></div></li>
+    </ul></div>
+
+    <div class="year-group"><h3>2022</h3><ul class="talks">
+      <li><span class="when">5 Dec</span><div><div class="t">A rigidity result for the Robin torsion problem</div><div class="ev"><em>Geometric Analysis and PDEs at PoliMi</em>, Politecnico di Milano<span class="tag">invited</span></div></div></li>
+      <li><span class="when">10 Nov</span><div><div class="t">A rigidity result for the Robin torsion problem</div><div class="ev"><em>Geometric Analysis and PDEs in Sorrento</em><span class="tag">invited</span></div></div></li>
+      <li><span class="when">23 Sep</span><div><div class="t">The orthotropic <i>p</i>-Laplace operator of Steklov type as <i>p</i> goes to infinity</div><div class="ev">IX <em>Partial Differential Equations, Optimal Design and Numerics</em>, Benasque</div></div></li>
+      <li><span class="when">6 Sep</span><div><div class="t">The orthotropic <i>p</i>-Laplace operator of Steklov type as <i>p</i> goes to infinity</div><div class="ev"><em>Anisotropic Isoperimetric Problems and Related Topics</em>, Rome<span class="tag">invited</span></div></div></li>
+      <li><span class="when">28 Jul</span><div><div class="t">An eigenvalue problem for the Laplacian in doubly connected domains</div><div class="ev">Joint Junior Seminar, FAU Erlangen-Nürnberg<span class="tag">invited</span></div></div></li>
+      <li><span class="when">1 Jul</span><div><div class="t">Optimization and stability for eigenvalues of linear and nonlinear type</div><div class="ev">FAU–AvH Miniworkshop <em>Recent Advances in Analysis and Control</em>, Erlangen<span class="tag">invited</span></div></div></li>
+      <li><span class="when">13 Jun</span><div><div class="t">Sharp and quantitative estimates for the <i>p</i>-torsion of convex sets</div><div class="ev">SHAPO Shape Optimization Conference, Roscoff, France</div></div></li>
+      <li><span class="when">18 Feb</span><div><div class="t">Sharp and quantitative estimates for the <i>p</i>-torsion of convex sets</div><div class="ev"><em>PDEs Presence in Rome</em>, Sapienza University of Rome<span class="tag">invited</span></div></div></li>
+    </ul></div>
+
+    <div class="year-group"><h3>2021</h3><ul class="talks">
+      <li><span class="when">24 Sep</span><div><div class="t">A reverse quantitative isoperimetric type inequality for the Dirichlet Laplacian</div><div class="ev"><em>Geometric Theory of PDEs and Sharp Functional Inequalities</em>, Accademia Nazionale dei Lincei, Rome</div></div></li>
+      <li><span class="when">24 Jun</span><div><div class="t">A reverse quantitative isoperimetric type inequality for the Dirichlet Laplacian</div><div class="ev">Online Mini-Courses in Mathematical Analysis, University of Padua</div></div></li>
+      <li><span class="when">27 Jan</span><div><div class="t">Introduction to the moving planes method: Alexandrov's theorem and Serrin's theorem</div><div class="ev">Introductory seminar to D. Bucur's lecture, University of Naples Federico II</div></div></li>
+    </ul></div>
+
+    <div class="year-group"><h3>2020</h3><ul class="talks">
+      <li><span class="when">3 Dec</span><div><div class="t">Optimization and stability problems for eigenvalues of linear and non-linear operators</div><div class="ev">PhD Seminar in Mathematics and Applications, University of Naples Federico II</div></div></li>
+      <li><span class="when">26 Nov</span><div><div class="t">Quantitative Weinstock inequality for convex sets</div><div class="ev">ANR-SHAPO seminar, Université de Lorraine<span class="tag">invited</span></div></div></li>
+      <li><span class="when">16 Sep</span><div><div class="t">A Weinstock type inequality for convex sets</div><div class="ev">Online Mini-Courses in Mathematical Analysis, University of Padua</div></div></li>
+    </ul></div>
+
+    <div class="year-group"><h3>2019</h3><ul class="talks">
+      <li><span class="when">25 Sep</span><div><div class="t">Two estimates for the first Robin eigenvalue of the Finsler Laplacian with negative boundary parameter</div><div class="ev"><em>Shape Optimization and Isoperimetric and Functional Inequalities</em>, Levico Terme</div></div></li>
+      <li><span class="when">5 Sep</span><div><div class="t">Weighted isoperimetric inequalities and stability</div><div class="ev">XXI Congress of the Italian Mathematical Union (UMI), Pavia</div></div></li>
+      <li><span class="when">11 Jul</span><div><div class="t">Two estimates for the first Robin eigenvalue of the Finsler Laplacian with negative boundary parameter</div><div class="ev">INdAM Intensive Period <em>Shape Optimization, Control and Inverse Problems for PDEs</em>, Naples</div></div></li>
+    </ul></div>
+
+    <div class="year-group"><h3>2018</h3><ul class="talks">
+      <li><span class="when">15 Dec</span><div><div class="t">Anisotropic isoperimetric inequalities involving boundary momentum, perimeter and volume</div><div class="ev"><em>Weekend on Variational Methods and Differential Equations</em>, University of Catania</div></div></li>
+    </ul></div>
+  </section>
+
+  <section aria-labelledby="service">
+    <h2 id="service">Service</h2>
+    <ul class="list">
+      <li>Reviewer for <em>zbMATH Open</em> and <em>Mathematical Reviews</em>; referee for <em>Mathematica Bohemica</em> and <em>Mathematical Inequalities &amp; Applications</em>.</li>
+      <li>Member of the Technical and Scientific Committee of the University of Naples Federico II for the evaluation of PRIN 2022 and PRIN 2022 PNRR projects <span class="sub">(since 2024)</span>.</li>
+    </ul>
+  </section>
+</div>
+
+<!-- ============================ PUBLICATIONS ============================ -->
+<div class="view" id="view-publications">
+  <section>
+    <h1 class="page-title">Publications</h1>
+    <p class="lede">Authors are listed in alphabetical order, as is customary in mathematics. Links go to the journal version (DOI) or to arXiv.</p>
+  </section>
+
+  <section aria-labelledby="preprints">
+    <h2 id="preprints">Preprints <span class="count">(4)</span></h2>
+    <ol class="pubs plain">
+      <li><div class="pub">
+        <span class="title">A reverse Faber–Krahn inequality for the Robin Laplacian with negative boundary parameter: small coupling in all dimensions</span>
+        <span class="authors">N. Gavitone, D. Krejčiřík, <b>G. Paoli</b></span>
+        <span class="venue"><a href="https://arxiv.org/abs/2606.24341" target="_blank" rel="noopener">arXiv:2606.24341</a></span>
+      </div></li>
+      <li><div class="pub">
+        <span class="title">Anisotropic gradient rearrangement of BV functions and applications</span>
+        <span class="authors"><b>G. Paoli</b>, Y. Yang</span>
+        <span class="venue"><a href="https://arxiv.org/abs/2605.15849" target="_blank" rel="noopener">arXiv:2605.15849</a></span>
+      </div></li>
+      <li><div class="pub">
+        <span class="title">Sharp bounds and geometric properties of the first non-trivial Steklov–Neumann eigenvalue</span>
+        <span class="authors">S. Basak, <b>G. Paoli</b>, R. Sannipoli, S. Verma</span>
+        <span class="venue"><a href="https://arxiv.org/abs/2603.25448" target="_blank" rel="noopener">arXiv:2603.25448</a></span>
+      </div></li>
+      <li><div class="pub">
+        <span class="title">Hessian operators, overdetermined problems, and higher order mean curvatures: symmetry and stability results</span>
+        <span class="authors">N. Gavitone, A. L. Masiello, <b>G. Paoli</b>, G. Poggesi</span>
+        <span class="venue"><a href="https://arxiv.org/abs/2505.23350" target="_blank" rel="noopener">arXiv:2505.23350</a></span>
+      </div></li>
+    </ol>
+  </section>
+
+  <section aria-labelledby="papers">
+    <h2 id="papers">Journal articles <span class="count">(19)</span></h2>
+    <ol class="pubs" style="--start: 20">
+      <li><div class="pub">
+        <span class="title">A quantitative Talenti-type comparison result with Robin boundary conditions</span>
+        <span class="authors">V. Amato, R. Barbato, S. Cito, A. L. Masiello, <b>G. Paoli</b></span>
+        <span class="venue"><em>Annali di Matematica Pura ed Applicata</em> (2026) · <a href="https://doi.org/10.1007/s10231-026-01722-z" target="_blank" rel="noopener">DOI</a></span>
+      </div></li>
+      <li><div class="pub">
+        <span class="title">Sharp estimates for the Laplacian torsional rigidity with negative Robin boundary conditions</span>
+        <span class="authors">N. Gavitone, D. Krejčiřík, <b>G. Paoli</b></span>
+        <span class="venue"><em>Bulletin of the London Mathematical Society</em> (2026) · <a href="https://doi.org/10.1112/blms.70407" target="_blank" rel="noopener">DOI</a></span>
+      </div></li>
+      <li><div class="pub">
+        <span class="title">Sharp inequalities involving the Cheeger constant of planar convex sets</span>
+        <span class="authors">I. Ftouhi, A. L. Masiello, <b>G. Paoli</b></span>
+        <span class="venue"><em>ESAIM: Control, Optimisation and Calculus of Variations</em> 30 (2024) · <a href="https://doi.org/10.1051/cocv/2024015" target="_blank" rel="noopener">DOI</a></span>
+      </div></li>
+      <li><div class="pub">
+        <span class="title">Rigidity results for the <i>p</i>-Laplacian Poisson problem with Robin boundary conditions</span>
+        <span class="authors">A. L. Masiello, <b>G. Paoli</b></span>
+        <span class="venue"><em>Journal of Optimization Theory and Applications</em> (2024) · <a href="https://doi.org/10.1007/s10957-024-02442-1" target="_blank" rel="noopener">DOI</a></span>
+      </div></li>
+      <li><div class="pub">
+        <span class="title">A stability result for the first Robin–Neumann eigenvalue: a double perturbation approach</span>
+        <span class="authors">S. Cito, <b>G. Paoli</b>, G. Piscitelli</span>
+        <span class="venue"><em>Communications in Contemporary Mathematics</em> (2024) · <a href="https://doi.org/10.1142/S0219199724500391" target="_blank" rel="noopener">DOI</a></span>
+      </div></li>
+      <li><div class="pub">
+        <span class="title">The Talenti comparison result in a quantitative form</span>
+        <span class="authors">V. Amato, R. Barbato, A. L. Masiello, <b>G. Paoli</b></span>
+        <span class="venue"><em>Annali della Scuola Normale Superiore di Pisa, Classe di Scienze</em> 31 (2024) · <a href="https://doi.org/10.2422/2036-2145.202404_010" target="_blank" rel="noopener">DOI</a></span>
+      </div></li>
+      <li><div class="pub">
+        <span class="title">Finite element approximation of the Hardy constant</span>
+        <span class="authors">F. Della Pietra, G. Fantuzzi, L. I. Ignat, A. L. Masiello, <b>G. Paoli</b>, E. Zuazua</span>
+        <span class="venue"><em>Journal of Convex Analysis</em> 31(2) (2024), 497–523</span>
+      </div></li>
+      <li><div class="pub">
+        <span class="title">A remark on solutions to semilinear equations with Robin boundary conditions</span>
+        <span class="authors">A. Celentano, A. L. Masiello, <b>G. Paoli</b></span>
+        <span class="venue"><em>Zeitschrift für Analysis und ihre Anwendungen</em> 43 (2024), 461–469 · <a href="https://doi.org/10.4171/zaa/1773" target="_blank" rel="noopener">DOI</a></span>
+      </div></li>
+      <li><div class="pub">
+        <span class="title">Sharp and quantitative estimates for the <i>p</i>-torsion of convex sets</span>
+        <span class="authors">V. Amato, A. L. Masiello, <b>G. Paoli</b>, R. Sannipoli</span>
+        <span class="venue"><em>NoDEA Nonlinear Differential Equations and Applications</em> 30 (2023) · <a href="https://doi.org/10.1007/s00030-022-00822-y" target="_blank" rel="noopener">DOI</a></span>
+      </div></li>
+      <li><div class="pub">
+        <span class="title">A rigidity result for the Robin torsion problem</span>
+        <span class="authors">A. L. Masiello, <b>G. Paoli</b></span>
+        <span class="venue"><em>Journal of Geometric Analysis</em> 33(5) (2023), Paper 149 · <a href="https://doi.org/10.1007/s12220-023-01202-3" target="_blank" rel="noopener">DOI</a></span>
+      </div></li>
+      <li><div class="pub">
+        <span class="title">A reverse quantitative isoperimetric type inequality for the Dirichlet Laplacian</span>
+        <span class="authors"><b>G. Paoli</b></span>
+        <span class="venue"><em>Rendiconti Lincei – Matematica e Applicazioni</em> 33 (2022), 361–384 · <a href="https://doi.org/10.4171/rlm/973" target="_blank" rel="noopener">DOI</a></span>
+      </div></li>
+      <li><div class="pub">
+        <span class="title">An isoperimetric inequality for the first Steklov–Dirichlet Laplacian eigenvalue of convex sets with a spherical hole</span>
+        <span class="authors">N. Gavitone, <b>G. Paoli</b>, G. Piscitelli, R. Sannipoli</span>
+        <span class="venue"><em>Pacific Journal of Mathematics</em> 320 (2022), 241–259 · <a href="https://doi.org/10.2140/pjm.2022.320.241" target="_blank" rel="noopener">DOI</a></span>
+      </div></li>
+      <li><div class="pub">
+        <span class="title">An estimate for the anisotropic maximum curvature in the planar case</span>
+        <span class="authors"><b>G. Paoli</b></span>
+        <span class="venue"><em>Ricerche di Matematica</em> 71(1) (2022) · <a href="https://doi.org/10.1007/s11587-021-00573-5" target="_blank" rel="noopener">DOI</a></span>
+      </div></li>
+      <li><div class="pub">
+        <span class="title">The orthotropic <i>p</i>-Laplace eigenvalue problem of Steklov type as <i>p</i> → +∞</span>
+        <span class="authors">G. Ascione, <b>G. Paoli</b></span>
+        <span class="venue"><em>Journal of Mathematical Analysis and Applications</em> 501 (2021) · <a href="https://doi.org/10.1016/j.jmaa.2021.125219" target="_blank" rel="noopener">DOI</a></span>
+      </div></li>
+      <li><div class="pub">
+        <span class="title">A stability result for the Steklov Laplacian eigenvalue problem with a spherical obstacle</span>
+        <span class="authors"><b>G. Paoli</b>, G. Piscitelli, R. Sannipoli</span>
+        <span class="venue"><em>Communications on Pure and Applied Analysis</em> 20 (2021), 145–158 · <a href="https://doi.org/10.3934/cpaa.2020261" target="_blank" rel="noopener">DOI</a></span>
+      </div></li>
+      <li><div class="pub">
+        <span class="title">A quantitative Weinstock inequality for convex sets</span>
+        <span class="authors">N. Gavitone, D. A. La Manna, <b>G. Paoli</b>, L. Trani</span>
+        <span class="venue"><em>Calculus of Variations and Partial Differential Equations</em> 59 (2020), 1–20 · <a href="https://doi.org/10.1007/s00526-019-1642-9" target="_blank" rel="noopener">DOI</a></span>
+      </div></li>
+      <li><div class="pub">
+        <span class="title">Sharp estimates for the first <i>p</i>-Laplacian eigenvalue and for the <i>p</i>-torsional rigidity on convex sets with holes</span>
+        <span class="authors"><b>G. Paoli</b>, G. Piscitelli, L. Trani</span>
+        <span class="venue"><em>ESAIM: Control, Optimisation and Calculus of Variations</em> 26 (2020) · <a href="https://doi.org/10.1051/cocv/2020033" target="_blank" rel="noopener">DOI</a></span>
+      </div></li>
+      <li><div class="pub">
+        <span class="title">Anisotropic isoperimetric inequalities involving boundary momentum, perimeter and volume</span>
+        <span class="authors"><b>G. Paoli</b>, L. Trani</span>
+        <span class="venue"><em>Nonlinear Analysis</em> 187 (2019), 229–246 · <a href="https://doi.org/10.1016/j.na.2019.04.017" target="_blank" rel="noopener">DOI</a></span>
+      </div></li>
+      <li><div class="pub">
+        <span class="title">Two estimates for the first Robin eigenvalue of the Finsler Laplacian with negative boundary parameter</span>
+        <span class="authors"><b>G. Paoli</b>, L. Trani</span>
+        <span class="venue"><em>Journal of Optimization Theory and Applications</em> 181 (2019), 743–757 · <a href="https://doi.org/10.1007/s10957-019-01487-x" target="_blank" rel="noopener">DOI</a></span>
+      </div></li>
+    </ol>
+  </section>
+
+  <section aria-labelledby="thesis">
+    <h2 id="thesis">PhD thesis</h2>
+    <ol class="pubs plain">
+      <li><div class="pub">
+        <span class="title">Optimization and stability problems for eigenvalues of linear and non-linear operators</span>
+        <span class="authors"><b>G. Paoli</b></span>
+        <span class="venue">PhD thesis, University of Naples Federico II (2021)</span>
+      </div></li>
+    </ol>
+  </section>
+</div>
+
+<!-- ============================ TEACHING ============================ -->
+<div class="view" id="view-teaching">
+  <section>
+    <h1 class="page-title">Teaching</h1>
+    <p class="lede">I teach Mathematical Analysis in the engineering degree programmes of the University of Naples Federico II.</p>
+  </section>
+
+  <section aria-labelledby="courses" lang="it">
+    <h2 id="courses">Insegnamenti</h2>
+    <div class="table-scroll">
+      <table class="course-table">
+        <thead><tr><th scope="col">Anno</th><th scope="col">Insegnamento</th><th scope="col">Impegno</th></tr></thead>
+        <tbody>
+          <tr><td>2026–27</td><td><div class="c">Analisi Matematica I</div><div class="p">Docente · CdL in Ingegneria Informatica e in Ingegneria dell'Automazione e Robotica</div></td><td>9 CFU · 72 ore</td></tr>
+          <tr><td>2025–26</td><td><div class="c">Analisi Matematica I</div><div class="p">Docente · CdL in Ingegneria Informatica e in Ingegneria dell'Automazione e Robotica</div></td><td>9 CFU · 72 ore</td></tr>
+          <tr><td>2025–26</td><td><div class="c">Analisi Matematica II</div><div class="p">Co-docente · CdL in Ingegneria Biomedica</div></td><td>4 CFU · 32 ore</td></tr>
+          <tr><td>Set 2025</td><td><div class="c">Precorso di Matematica di base</div><div class="p">Corsi di Laurea in Ingegneria</div></td><td>20 ore</td></tr>
+          <tr><td>2024–25</td><td><div class="c">Analisi Matematica I</div><div class="p">Docente · CdL in Ingegneria Informatica e in Ingegneria dell'Automazione</div></td><td>9 CFU · 72 ore</td></tr>
+          <tr><td>2023–24</td><td><div class="c">Analisi Matematica I</div><div class="p">Docente · CdL in Ingegneria Informatica e in Ingegneria dell'Automazione</div></td><td>9 CFU · 72 ore</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section aria-labelledby="tutoring" lang="it">
+    <h2 id="tutoring">Tutorato</h2>
+    <div class="table-scroll">
+      <table class="course-table">
+        <thead><tr><th scope="col">Anno</th><th scope="col">Insegnamento</th><th scope="col">Impegno</th></tr></thead>
+        <tbody>
+          <tr><td>2020–21</td><td><div class="c">Analisi Matematica II</div><div class="p">Tutor · CdL in Matematica</div></td><td>33 ore</td></tr>
+          <tr><td>2019–20</td><td><div class="c">Analisi Matematica II</div><div class="p">Tutor · CdL in Matematica</div></td><td>14 ore</td></tr>
+          <tr><td>2018–19</td><td><div class="c">Matematica</div><div class="p">Tutor · CdL in Scienze Biologiche</div></td><td>50 ore</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section aria-labelledby="mentoring">
+    <h2 id="mentoring">Mentoring</h2>
+    <ul class="list">
+      <li>Mentor in the FAU programme <em>ARIADNE technat</em> (2022), which supports women early-career researchers in science and engineering, Friedrich-Alexander-Universität Erlangen-Nürnberg.</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="outreach">
+    <h2 id="outreach">Outreach</h2>
+    <ul class="list">
+      <li>Workshops <em>Bees and soap bubbles</em> and <em>Music and mathematics</em> at Città della Scienza, Naples <span class="sub">(2025–2026)</span>.</li>
+      <li>Problem setting for the “Renato Caccioppoli” Mathematics Competition for high-school students, 12th and 13th editions, Liceo Mercalli, Naples <span class="sub">(2025, 2026)</span>.</li>
+    </ul>
+  </section>
+</div>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Gloria Paoli</span>
+    <span>Last updated November 2026</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var views = ["home", "research", "publications", "teaching"];
+  var panels = views.map(function (v) { return document.getElementById("view-" + v); });
+  var links = document.querySelectorAll("nav a");
+  function show() {
+    var h = location.hash.slice(1);
+    var target = views.indexOf(h) >= 0 ? h : null;
+    // A hash pointing inside a view (e.g. #talks) opens that view and scrolls to it.
+    var inner = null;
+    if (!target && h) {
+      var el = document.getElementById(h);
+      var host = el && el.closest(".view");
+      if (host) { target = host.id.slice(5); inner = el; }
+    }
+    target = target || "home";
+    panels.forEach(function (p) { p.hidden = p.id !== "view-" + target; });
+    links.forEach(function (a) {
+      if (a.getAttribute("href") === "#" + target) a.setAttribute("aria-current", "page");
+      else a.removeAttribute("aria-current");
+    });
+    if (inner) inner.scrollIntoView();
+    else window.scrollTo(0, 0);
+  }
+  window.addEventListener("hashchange", show);
+  show();
+})();
+</script>
+</body>
+</html>
