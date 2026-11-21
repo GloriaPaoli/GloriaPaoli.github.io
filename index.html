@@ -10,31 +10,37 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&display=swap">
 <style>
-/* Layout: one centred reading column; sticky name + tab bar; four views (home, research, publications, teaching) switched by #hash */
+/* Layout: grey-blue backdrop; full-width top bar; below it a two-column grid on wide screens
+   (sticky profile card on the left, content panel on the right) that stacks to one column on tablets and phones */
 :root {
-  --bg: #fbfcfe;
-  --surface: #eef2f9;
+  --bg: #e3e9f1;        /* grigio-celestino backdrop */
+  --panel: #ffffff;     /* cards and top bar */
+  --surface: #edf1f7;   /* chips, subtle fills inside panels */
   --fg: #17202f;
-  --muted: #586379;
+  --muted: #566279;
   --accent: #1f4a96;
-  --rule: #d8dfeb;
+  --rule: #d6deea;
+  --shadow: 0 1px 2px rgba(23, 45, 85, 0.06), 0 4px 16px rgba(23, 45, 85, 0.05);
   --font-display: "Newsreader", "Iowan Old Style", Georgia, serif;
   --font-body: "Source Sans 3", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --topbar-h: 3.6rem;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0e131c; --surface: #172033; --fg: #e4e9f2; --muted: #9ba7bb; --accent: #93b4ff; --rule: #27324a;
+    --bg: #0b1018; --panel: #141b27; --surface: #1c2535; --fg: #e4e9f2; --muted: #9ba7bb;
+    --accent: #93b4ff; --rule: #263147; --shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0e131c; --surface: #172033; --fg: #e4e9f2; --muted: #9ba7bb; --accent: #93b4ff; --rule: #27324a;
+  --bg: #0b1018; --panel: #141b27; --surface: #1c2535; --fg: #e4e9f2; --muted: #9ba7bb;
+  --accent: #93b4ff; --rule: #263147; --shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
-[id] { scroll-margin-top: 5rem; }
+[id] { scroll-margin-top: calc(var(--topbar-h) + 1.5rem); }
 body {
   margin: 0;
   background: var(--bg);
@@ -44,15 +50,14 @@ body {
 }
 body::before {
   content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
-  z-index: 10; background: var(--bg);
+  z-index: 10; background: var(--panel);
 }
 a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
 a:hover { text-decoration-thickness: 2px; }
 a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
-em, i { font-style: italic; }
 
 .wrap {
-  max-width: 54rem;
+  max-width: 86rem;
   margin: 0 auto;
   padding-left: max(20px, env(safe-area-inset-left, 0px));
   padding-right: max(20px, env(safe-area-inset-right, 0px));
@@ -61,57 +66,75 @@ em, i { font-style: italic; }
 /* Top bar */
 .topbar {
   position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
-  background: var(--bg);
+  background: var(--panel);
   border-bottom: 1px solid var(--rule);
 }
 .topbar .wrap {
-  display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between;
-  gap: 0.25rem 1.5rem; padding-block: 0.75rem;
+  min-height: var(--topbar-h);
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 0.25rem 1.5rem; padding-block: 0.5rem;
 }
 .brand {
-  font-family: var(--font-display); font-size: 1.25rem; font-weight: 500;
+  font-family: var(--font-display); font-size: 1.3rem; font-weight: 500;
   color: var(--fg); text-decoration: none;
 }
-nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; }
+nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.25rem; }
 nav a {
-  display: inline-block; padding-block: 0.25rem;
+  display: inline-block; padding: 0.35rem 0.8rem; border-radius: 999px;
   color: var(--muted); text-decoration: none; font-weight: 600; font-size: 0.95rem;
-  border-bottom: 2px solid transparent;
 }
-nav a:hover { color: var(--fg); }
-nav a[aria-current="page"] { color: var(--accent); border-bottom-color: var(--accent); }
+nav a:hover { color: var(--fg); background: var(--surface); }
+nav a[aria-current="page"] { color: var(--accent); background: var(--surface); }
 
-main { padding-block: 2.5rem 3rem; }
-.view { display: grid; gap: 2.75rem; }
-.view > section { display: grid; gap: 1rem; min-width: 0; }
-
-h1, h2, h3 { font-family: var(--font-display); font-weight: 500; text-wrap: balance; margin: 0; line-height: 1.2; }
-h1 { font-size: clamp(2.25rem, 6vw, 3rem); letter-spacing: -0.01em; }
-h2 { font-size: 1.75rem; color: var(--accent); }
-h3 { font-size: 1.2rem; }
-.page-title { font-size: clamp(2rem, 5vw, 2.5rem); color: var(--fg); }
-.lede { margin: 0; max-width: 40rem; color: var(--muted); }
-p { margin: 0; max-width: 42rem; }
-.label {
-  font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+/* Page grid */
+.layout {
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.25rem;
+  padding-block: 1.25rem 2.5rem;
+}
+.card {
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
 }
 
-/* Home hero */
-.hero { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2rem; align-items: start; }
-.hero-text { display: grid; gap: 0.9rem; min-width: 0; }
-.role { font-family: var(--font-display); font-size: 1.35rem; color: var(--accent); line-height: 1.35; }
-.affil { font-style: normal; color: var(--muted); line-height: 1.5; }
+/* Profile card */
+.profile {
+  display: grid; grid-template-columns: 7rem minmax(0, 1fr); gap: 1.25rem; align-items: start;
+  padding: 1.25rem;
+}
+.portrait {
+  display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover;
+  border-radius: 8px; background: var(--surface);
+}
+.profile-text { display: grid; gap: 0.7rem; min-width: 0; }
+.name { font-family: var(--font-display); font-size: 1.9rem; font-weight: 500; line-height: 1.1; margin: 0; }
+.role { font-family: var(--font-display); font-size: 1.15rem; color: var(--accent); line-height: 1.3; }
+.affil { font-style: normal; color: var(--muted); line-height: 1.5; font-size: 0.95rem; }
 .affil strong { color: var(--fg); font-weight: 600; }
-.links { display: flex; flex-wrap: wrap; gap: 0.35rem 1.25rem; padding: 0; margin: 0; list-style: none; }
+.contact { list-style: none; margin: 0; padding: 0.8rem 0 0; border-top: 1px solid var(--rule); display: grid; gap: 0.35rem; font-size: 0.95rem; }
+.contact li { display: grid; grid-template-columns: 4.2rem minmax(0, 1fr); gap: 0.5rem; }
+.contact .k { color: var(--muted); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding-top: 0.15rem; }
+.contact a { overflow-wrap: anywhere; }
 .email { user-select: all; }
 
-.figure { margin: 0; width: 12rem; max-width: 100%; display: grid; gap: 0.4rem; justify-items: center; }
-.figure img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 6px; background: var(--surface); }
+/* Content panel */
+.content { padding: 1.75rem 1.25rem 2.25rem; min-width: 0; }
+.view { display: grid; }
+.view > section { display: grid; gap: 1rem; min-width: 0; }
+.view > section + section { margin-top: 2.25rem; padding-top: 2.25rem; border-top: 1px solid var(--rule); }
+
+h1, h2, h3 { font-family: var(--font-display); font-weight: 500; text-wrap: balance; margin: 0; line-height: 1.2; }
+h2 { font-size: 1.75rem; color: var(--accent); }
+h3 { font-size: 1.2rem; }
+.page-title { font-size: clamp(2rem, 4vw, 2.6rem); color: var(--fg); }
+.lede { margin: 0; max-width: 48rem; color: var(--muted); font-size: 1.1rem; }
+p { margin: 0; max-width: 48rem; }
 
 .interests { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0; margin: 0; list-style: none; }
 .interests li {
-  background: var(--surface); color: var(--fg);
-  padding: 0.25rem 0.7rem; border-radius: 999px; font-size: 0.92rem;
+  background: var(--surface); color: var(--fg); border: 1px solid var(--rule);
+  padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.92rem;
 }
 
 /* Timelines (positions, visits, grants) */
@@ -124,8 +147,8 @@ p { margin: 0; max-width: 42rem; }
 .timeline.compact { gap: 0.6rem; }
 
 /* Publications */
-.pubs { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.15rem; counter-reset: pub var(--start); }
-.pubs li { display: grid; grid-template-columns: 2.25rem minmax(0, 1fr); gap: 0.75rem; counter-increment: pub -1; }
+.pubs { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.2rem; counter-reset: pub var(--start); }
+.pubs li { display: grid; grid-template-columns: 2.5rem minmax(0, 1fr); gap: 0.75rem; counter-increment: pub -1; }
 .pubs li::before {
   content: "[" counter(pub) "]";
   color: var(--muted); font-variant-numeric: tabular-nums; font-size: 0.9rem; padding-top: 0.2rem; text-align: right;
@@ -133,8 +156,7 @@ p { margin: 0; max-width: 42rem; }
 .pubs.plain li::before { content: none; }
 .pubs.plain li { grid-template-columns: minmax(0, 1fr); }
 .pub { display: grid; gap: 0.1rem; min-width: 0; }
-.pub .title { font-family: var(--font-display); font-size: 1.13rem; line-height: 1.35; }
-.pub .authors { color: var(--fg); }
+.pub .title { font-family: var(--font-display); font-size: 1.15rem; line-height: 1.35; }
 .pub .authors b { font-weight: 600; }
 .pub .venue { color: var(--muted); }
 .pub .venue a { white-space: nowrap; }
@@ -150,37 +172,57 @@ p { margin: 0; max-width: 42rem; }
 .talks .ev { color: var(--muted); }
 .tag {
   display: inline-block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
-  color: var(--accent); border: 1px solid var(--rule); border-radius: 4px; padding: 0 0.35rem; margin-left: 0.35rem;
+  color: var(--accent); background: var(--surface); border-radius: 4px; padding: 0 0.4rem; margin-left: 0.4rem;
   vertical-align: 0.1em;
 }
 
 /* Simple lists */
-.list { margin: 0; padding-left: 1.2rem; display: grid; gap: 0.5rem; }
+.list { margin: 0; padding-left: 1.2rem; display: grid; gap: 0.5rem; max-width: 52rem; }
 .list li { padding-left: 0.2rem; }
 .list .sub { color: var(--muted); }
 
-/* Teaching table */
-.course-table { width: 100%; border-collapse: collapse; font-size: 0.98rem; }
+/* Teaching tables */
 .table-scroll { overflow-x: auto; }
+.course-table { width: 100%; border-collapse: collapse; font-size: 0.98rem; }
 .course-table th { text-align: left; font-weight: 600; color: var(--muted); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 0 0.75rem 0.5rem 0; border-bottom: 1px solid var(--rule); }
-.course-table td { padding: 0.7rem 0.75rem 0.7rem 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
-.course-table td:first-child { white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--muted); }
-.course-table td:last-child { white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--muted); }
+.course-table td { padding: 0.75rem 0.75rem 0.75rem 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.course-table tr:last-child td { border-bottom: 0; }
+.course-table td:first-child, .course-table td:last-child { white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--muted); }
 .course-table .c { font-weight: 600; }
 .course-table .p { color: var(--muted); }
 
-.note {
-  background: var(--surface); border-radius: 8px; padding: 1rem 1.25rem; max-width: 42rem;
+footer { color: var(--muted); font-size: 0.88rem; }
+footer .wrap { padding-block: 0 2rem; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 1.5rem; }
+
+/* Phones: the profile card only on Home, so other sections start at the top */
+@media (max-width: 999px) {
+  :root[data-view]:not([data-view="home"]) .profile { display: none; }
 }
-
-footer { border-top: 1px solid var(--rule); color: var(--muted); font-size: 0.88rem; }
-footer .wrap { padding-block: 1.5rem 2rem; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 1.5rem; }
-
 @media (max-width: 640px) {
-  .hero { grid-template-columns: minmax(0, 1fr); }
-  .figure { width: 9rem; justify-self: start; order: -1; }
+  .profile { grid-template-columns: 5.5rem minmax(0, 1fr); gap: 1rem; padding: 1rem; }
+  .name { font-size: 1.6rem; }
+  .profile .contact { grid-column: 1 / -1; }
   .timeline li { grid-template-columns: minmax(0, 1fr); gap: 0.1rem; }
   .talks li { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .pubs li { grid-template-columns: 2.1rem minmax(0, 1fr); gap: 0.5rem; }
+  nav a { padding: 0.3rem 0.6rem; }
+}
+@media (min-width: 641px) {
+  .content { padding: 2.25rem 2.5rem 2.75rem; }
+  .profile { grid-template-columns: 10rem minmax(0, 1fr); padding: 1.5rem; gap: 1.5rem; }
+}
+/* Wide screens: profile becomes a sidebar */
+@media (min-width: 1000px) {
+  .layout { grid-template-columns: 19rem minmax(0, 1fr); gap: 1.75rem; align-items: start; padding-block: 1.75rem 3rem; }
+  .profile { grid-template-columns: minmax(0, 1fr); padding: 1.5rem; gap: 1.25rem; }
+  .content { padding: 2.75rem 3.25rem 3.25rem; }
+}
+@media (min-width: 1000px) and (min-height: 780px) {
+  .profile { position: sticky; top: calc(env(safe-area-inset-top, 0px) + var(--topbar-h) + 1.75rem); }
+}
+@media (min-width: 1400px) {
+  .layout { grid-template-columns: 21rem minmax(0, 1fr); gap: 2rem; }
+  .content { padding: 3rem 4rem 3.5rem; }
 }
 @media (prefers-reduced-motion: no-preference) {
   html { scroll-behavior: smooth; }
@@ -203,38 +245,38 @@ footer .wrap { padding-block: 1.5rem 2rem; display: flex; flex-wrap: wrap; justi
   </div>
 </header>
 
-<main class="wrap">
+<div class="wrap layout">
+
+<aside class="profile card" aria-label="Profile">
+  <!-- To change the photo, replace photo.jpg (it is shown at 4:5, cropped if needed) -->
+  <img class="portrait" src="photo.jpg" alt="Portrait of Gloria Paoli" width="480" height="600">
+  <div class="profile-text">
+    <h1 class="name">Gloria Paoli</h1>
+    <div class="role">Researcher in Mathematical Analysis</div>
+    <address class="affil">
+      <strong>Department of Mathematics and Applications “R. Caccioppoli”</strong><br>
+      University of Naples Federico II<br>
+      Complesso Universitario di Monte S. Angelo, Via Cintia<br>
+      80126 Naples, Italy
+    </address>
+  </div>
+  <ul class="contact">
+    <li><span class="k">Email</span><a class="email" href="mailto:gloria.paoli@unina.it">gloria.paoli@unina.it</a></li>
+    <li><span class="k">Unina</span><a href="https://www.docenti.unina.it/gloria.paoli" target="_blank" rel="noopener">docenti.unina.it/gloria.paoli</a></li>
+    <li><span class="k">arXiv</span><a href="https://arxiv.org/search/?searchtype=author&amp;query=Paoli%2C+Gloria" target="_blank" rel="noopener">Papers on arXiv</a></li>
+    <!-- Add your profiles here, for example:
+    <li><span class="k">Scholar</span><a href="https://scholar.google.com/citations?user=XXXX">Google Scholar</a></li>
+    <li><span class="k">MathSciNet</span><a href="https://mathscinet.ams.org/mathscinet/MRAuthorID/XXXX">MathSciNet</a></li>
+    <li><span class="k">ORCID</span><a href="https://orcid.org/XXXX-XXXX-XXXX-XXXX">XXXX-XXXX-XXXX-XXXX</a></li>
+    <li><span class="k">CV</span><a href="cv.pdf">Curriculum vitae (PDF)</a></li>
+    -->
+  </ul>
+</aside>
+
+<main class="content card">
 
 <!-- ============================ HOME ============================ -->
 <div class="view" id="view-home">
-  <section class="hero" aria-labelledby="name">
-    <div class="hero-text">
-      <h1 id="name">Gloria Paoli</h1>
-      <div class="role">Researcher in Mathematical Analysis</div>
-      <address class="affil">
-        <strong>Department of Mathematics and Applications “R. Caccioppoli”</strong><br>
-        University of Naples Federico II<br>
-        Complesso Universitario di Monte S. Angelo, Via Cintia<br>
-        80126 Naples, Italy
-      </address>
-      <ul class="links">
-        <li><a class="email" href="mailto:gloria.paoli@unina.it">gloria.paoli@unina.it</a></li>
-        <li><a href="#publications">Publications</a></li>
-        <li><a href="https://www.docenti.unina.it/gloria.paoli" target="_blank" rel="noopener">Unina page</a></li>
-        <li><a href="https://arxiv.org/search/?searchtype=author&amp;query=Paoli%2C+Gloria" target="_blank" rel="noopener">arXiv</a></li>
-        <!-- Add your profiles here, for example:
-        <li><a href="https://scholar.google.com/citations?user=XXXX">Google Scholar</a></li>
-        <li><a href="https://mathscinet.ams.org/mathscinet/MRAuthorID/XXXX">MathSciNet</a></li>
-        <li><a href="https://orcid.org/XXXX-XXXX-XXXX-XXXX">ORCID</a></li>
-        <li><a href="cv.pdf">CV</a></li>
-        -->
-      </ul>
-    </div>
-    <figure class="figure photo">
-      <img src="photo.jpg" alt="Portrait of Gloria Paoli" width="480" height="600">
-    </figure>
-  </section>
-
   <section aria-labelledby="about">
     <h2 id="about">About</h2>
     <p>I am a fixed-term researcher (RTDA) at the Department of Mathematics and Applications “R. Caccioppoli” of the University of Naples Federico II. I received my PhD in Mathematics from the University of Naples Federico II in 2021. Before my current position I was a postdoctoral fellow in Naples and an Alexander von Humboldt postdoctoral fellow at Friedrich-Alexander-Universität Erlangen-Nürnberg.</p>
@@ -271,7 +313,7 @@ footer .wrap { padding-block: 1.5rem 2rem; display: flex; flex-wrap: wrap; justi
 <!-- ============================ RESEARCH ============================ -->
 <div class="view" id="view-research">
   <section>
-    <h1 class="page-title">Research</h1>
+    <h2 class="page-title">Research</h2>
     <p class="lede">My research lies in the calculus of variations and the analysis of elliptic PDEs, with a focus on shape optimization, spectral inequalities and their quantitative versions.</p>
   </section>
 
@@ -403,7 +445,7 @@ footer .wrap { padding-block: 1.5rem 2rem; display: flex; flex-wrap: wrap; justi
 <!-- ============================ PUBLICATIONS ============================ -->
 <div class="view" id="view-publications">
   <section>
-    <h1 class="page-title">Publications</h1>
+    <h2 class="page-title">Publications</h2>
     <p class="lede">Authors are listed in alphabetical order, as is customary in mathematics. Links go to the journal version (DOI) or to arXiv.</p>
   </section>
 
@@ -549,7 +591,7 @@ footer .wrap { padding-block: 1.5rem 2rem; display: flex; flex-wrap: wrap; justi
 <!-- ============================ TEACHING ============================ -->
 <div class="view" id="view-teaching">
   <section>
-    <h1 class="page-title">Teaching</h1>
+    <h2 class="page-title">Teaching</h2>
     <p class="lede">I teach Mathematical Analysis in the engineering degree programmes of the University of Naples Federico II.</p>
   </section>
 
@@ -602,6 +644,8 @@ footer .wrap { padding-block: 1.5rem 2rem; display: flex; flex-wrap: wrap; justi
 
 </main>
 
+</div>
+
 <footer>
   <div class="wrap">
     <span>© 2026 Gloria Paoli</span>
@@ -625,6 +669,7 @@ footer .wrap { padding-block: 1.5rem 2rem; display: flex; flex-wrap: wrap; justi
       if (host) { target = host.id.slice(5); inner = el; }
     }
     target = target || "home";
+    document.documentElement.setAttribute("data-view", target);
     panels.forEach(function (p) { p.hidden = p.id !== "view-" + target; });
     links.forEach(function (a) {
       if (a.getAttribute("href") === "#" + target) a.setAttribute("aria-current", "page");
